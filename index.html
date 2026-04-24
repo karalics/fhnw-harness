@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mini-md demo</title>
+  <style>
+    * { margin: 0; box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { margin-bottom: 1rem; }
+    .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    textarea { width: 100%; min-height: 200px; font-family: monospace; font-size: 14px; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; resize: vertical; }
+    .preview { padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; min-height: 200px; }
+    label { font-weight: 600; display: block; margin-bottom: 0.25rem; }
+  </style>
+</head>
+<body>
+  <h1>mini-md live demo</h1>
+  <div class="columns">
+    <div>
+      <label for="input">Markdown</label>
+      <textarea id="input"># Hello **world**
+This is *italic* and **bold** text.
+## Subheading
+A mix: **strong and *nested*** works too.</textarea>
+    </div>
+    <div>
+      <label>Preview</label>
+      <div class="preview" id="output"></div>
+    </div>
+  </div>
+  <script type="module">
+    import { miniMd } from './dist/mini-md.js';
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+    const render = () => {
+      output.innerHTML = input.value
+        .split('\n')
+        .map(line => miniMd(line))
+        .map(line => line.startsWith('<h') ? line : `<p>${line}</p>`)
+        .join('');
+    };
+    input.addEventListener('input', render);
+    render();
+  </script>
+</body>
+</html>
